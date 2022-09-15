@@ -37,7 +37,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>K:\ProgramData\Vision\PublishedScripts\Beam\</OutputPath>
+    <OutputPath>\\aristrtst001\VA_DATA_Test%24\ProgramData\Vision\PublishedScripts\Beam\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>

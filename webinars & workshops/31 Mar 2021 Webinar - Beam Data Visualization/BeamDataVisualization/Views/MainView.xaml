@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BeamDataVisualization.Views"
         mc:Ignorable="d"
-        Title="MainView" Height="450" Width="800">
+        Title="MainView" Height="auto" Width="auto">
     <DockPanel>
         <local:PatientNavigationView DataContext="{Binding PatientNavigationViewModel}" DockPanel.Dock="Top"/>
         <local:DataFilterView DataContext="{Binding ScanPlotViewModel}" DockPanel.Dock="Left"/>

@@ -6,13 +6,13 @@
              xmlns:local="clr-namespace:BeamDataVisualization.Views"
              xmlns:oxy="http://oxyplot.org/wpf"
              mc:Ignorable="d" 
-             d:DesignHeight="auto" d:DesignWidth="auto" Background="White">
+             d:DesignHeight="1200" d:DesignWidth="1200" Background="White">
     <Grid>
-        <ScrollViewer Height="550">
+        <ScrollViewer Height="auto">
             <ItemsControl ItemsSource="{Binding ScanPlotModels}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <oxy:PlotView Model="{Binding}" Width="400" Height="400"/>
+                        <oxy:PlotView Model="{Binding}" Width="800" Height="800"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>

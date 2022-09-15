@@ -96,7 +96,7 @@ namespace BeamDataVisualization.ViewModels
         public ObservableCollection<PlotModel> ScanPlotModels { get; private set; }
         public List<BeamScanModel> BeamScans { get; private set; }
 
-        public DelegateCommand UpdateCommand { get; private set; }
+        public DelegateCommand ClearCommand { get; private set; }
 
         public ScanPlotViewModel(IEventAggregator eventAggregator)
         {
@@ -108,6 +108,13 @@ namespace BeamDataVisualization.ViewModels
             bFSCheck = false;
             _eventAggregator = eventAggregator;
             _eventAggregator.GetEvent<PlanSelectedEvent>().Subscribe(PlanSelected);
+            ClearCommand = new DelegateCommand(OnClear);
+        }
+
+        private void OnClear()
+        {
+            BeamScans.Clear();
+            SetPlotModels();
         }
 
         private void PlanSelected(PlanSetup plan)
@@ -231,7 +238,7 @@ namespace BeamDataVisualization.ViewModels
                     {
                         foreach (var grouped_plot in plot.GroupBy(x => x.FieldX))
                         {
-                            PlotModel plotModel = new PlotModel
+                            PlotModel plotModel = new PlotModel()
                             {
                                 Title = $"{plot.Key.ToString()} at {grouped_plot.Key:F1}cm",
                             };
@@ -245,6 +252,13 @@ namespace BeamDataVisualization.ViewModels
                                 Title = "Dose [%]",
                                 Position = AxisPosition.Left
                             });
+                            plotModel.Legends.Add(new Legend
+                            {
+                                LegendTitle = "Beams",
+                                LegendPosition = LegendPosition.RightTop,
+                                LegendPlacement = LegendPlacement.Outside
+                            });
+
                             foreach (var scan in grouped_plot)
                             {
                                 double norm_factor = GetNormFromScan(scan);
@@ -253,15 +267,18 @@ namespace BeamDataVisualization.ViewModels
                                 {
                                     series.Points.Add(new DataPoint(point.Position, point.DoseValue / norm_factor * 100.0));
                                 }
+                                plotModel.Legends.Add(new Legend
+                                {
+                                    LegendTitle = "Beams",
+                                    LegendPosition = LegendPosition.RightTop,
+                                    LegendPlacement = LegendPlacement.Outside
+                                });
                                 plotModel.Series.Add(series);
 
                             }
+
                             ScanPlotModels.Add(plotModel);
-                            plotModel.Legends.Add(new Legend
-                            {
-                                LegendPosition = LegendPosition.RightTop,
-                                LegendPlacement = LegendPlacement.Outside
-                            });
+                            
                             //plotModel.InvalidatePlot(true);
                         }
                     }
@@ -270,7 +287,7 @@ namespace BeamDataVisualization.ViewModels
                 {
                     foreach (var plot in BeamScans.GroupBy(x => x.BeamScanType))
                     {
-                        PlotModel plotModel = new PlotModel
+                        PlotModel plotModel = new PlotModel()
                         {
                             Title = $"{plot.Key.ToString()}s",
                         };
@@ -285,6 +302,12 @@ namespace BeamDataVisualization.ViewModels
                             Title = "Dose [%]",
                             Position = AxisPosition.Left
                         });
+                        plotModel.Legends.Add(new Legend
+                        {
+                            LegendTitle = "Beams",
+                            LegendPosition = LegendPosition.RightTop,
+                            LegendPlacement = LegendPlacement.Outside
+                        });
                         foreach (var scan in plot)
                         {
                             double norm_factor = GetNormFromScan(scan);
@@ -293,14 +316,16 @@ namespace BeamDataVisualization.ViewModels
                             {
                                 series.Points.Add(new DataPoint(point.Position, point.DoseValue / norm_factor * 100.0));
                             }
+                            plotModel.Legends.Add(new Legend
+                            {
+                                LegendTitle = "Beams",
+                                LegendPosition = LegendPosition.RightTop,
+                                LegendPlacement = LegendPlacement.Outside
+                            });
                             plotModel.Series.Add(series);
 
                         }
-                        plotModel.Legends.Add(new Legend
-                        {
-                            LegendPosition = LegendPosition.RightTop,
-                            LegendPlacement = LegendPlacement.Outside
-                        });
+
                         ScanPlotModels.Add(plotModel);
                         //plotModel.InvalidatePlot(true);
                     }
@@ -309,15 +334,10 @@ namespace BeamDataVisualization.ViewModels
                 {
                     foreach (var plot in BeamScans.GroupBy(x => x.FieldX))
                     {
-                        PlotModel plotModel = new PlotModel
+                        PlotModel plotModel = new PlotModel()
                         {
                             Title = $"Scans at {plot.Key:F1}cm",
                         };
-                        plotModel.Legends.Add(new Legend
-                        {
-                            LegendPosition = LegendPosition.RightTop,
-                            LegendPlacement = LegendPlacement.Outside
-                        });
                         plotModel.Axes.Add(new LinearAxis
                         {
                             Title = "Position [cm]",
@@ -328,6 +348,12 @@ namespace BeamDataVisualization.ViewModels
                             Title = "Dose [%]",
                             Position = AxisPosition.Left
                         });
+                        plotModel.Legends.Add(new Legend
+                        {
+                            LegendTitle = "Beams",
+                            LegendPosition = LegendPosition.RightTop,
+                            LegendPlacement = LegendPlacement.Outside
+                        });
                         foreach (var scan in plot)
                         {
                             double norm_factor = GetNormFromScan(scan);
@@ -336,6 +362,12 @@ namespace BeamDataVisualization.ViewModels
                             {
                                 series.Points.Add(new DataPoint(point.Position, point.DoseValue / norm_factor * 100.0));
                             }
+                            plotModel.Legends.Add(new Legend
+                            {
+                                LegendTitle = "Beams",
+                                LegendPosition = LegendPosition.RightTop,
+                                LegendPlacement = LegendPlacement.Outside
+                            });
                             plotModel.Series.Add(series);
 
                         }
@@ -348,7 +380,7 @@ namespace BeamDataVisualization.ViewModels
                     //all scans get their own plot.
                     foreach (var scan in BeamScans.OrderBy(x => x.BeamScanType).ThenBy(x => x.FieldX))
                     {
-                        PlotModel plotModel = new PlotModel
+                        PlotModel plotModel = new PlotModel()
                         {
                             Title = scan.DisplayTxt,
                         };
@@ -362,19 +394,26 @@ namespace BeamDataVisualization.ViewModels
                             Title = "Dose [%]",
                             Position = AxisPosition.Left
                         });
+                        plotModel.Legends.Add(new Legend
+                        {
+                            LegendTitle = "Beams",
+                            LegendPosition = LegendPosition.RightTop,
+                            LegendPlacement = LegendPlacement.Outside
+                        });
                         double norm_factor = GetNormFromScan(scan);
                         var series = new LineSeries();
                         foreach (var point in scan.BeamDataPoints)
                         {
                             series.Points.Add(new DataPoint(point.Position, point.DoseValue / norm_factor * 100.0));
                         }
-                        plotModel.Series.Add(series);
-                        ScanPlotModels.Add(plotModel);
                         plotModel.Legends.Add(new Legend
                         {
+                            LegendTitle = "Beams",
                             LegendPosition = LegendPosition.RightTop,
                             LegendPlacement = LegendPlacement.Outside
                         });
+                        plotModel.Series.Add(series);
+                        ScanPlotModels.Add(plotModel);
                         //plotModel.InvalidatePlot(true);
                     }
 

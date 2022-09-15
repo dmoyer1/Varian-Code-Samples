@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BeamDataVisualization.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="auto" Background="SlateGray">
+             d:DesignHeight="450"  Background="SlateGray">
     <Grid>
         <StackPanel Margin="0,0,0,0">
             <TextBlock Text="Group On:" FontWeight="Bold"/>
@@ -18,7 +18,7 @@
             <CheckBox Content="Select Depth" IsChecked="{Binding bDepthCheck}" Margin="5"/>
             <TextBox Height="20" TextWrapping="Wrap" Text="{Binding bDepth}"  Margin="0,0,0,0"/>
             <CheckBox Content="Keep Scan" IsChecked="{Binding bKeep}" Margin="5"/>
-            <Button Content="Update" Command="{Binding UpdateCommand}" Margin="5"/>
+            <Button Content="Clear" Command="{Binding ClearCommand}" Margin="5"/>
         </StackPanel>
     </Grid>
 </UserControl>
