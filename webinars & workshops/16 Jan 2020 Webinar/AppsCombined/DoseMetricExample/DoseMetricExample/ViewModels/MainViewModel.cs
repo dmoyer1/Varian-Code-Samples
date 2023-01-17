@@ -27,6 +27,7 @@ namespace DoseMetricExample.ViewModels
         public DelegateCommand SaveTemplateCommand{ get; set; }
         public DelegateCommand LoadMetricsCommand { get; set; }
         public DelegateCommand PrintCommand { get; private set; }
+        public DelegateCommand ClearMetricsCommand { get; set; }
         public MainViewModel(DoseMetricSelectionViewModel doseMetricSelectionViewModel,
             DoseMetricViewModel doseMetricViewModel,
             DVHSelectionViewModel dVHSelectionViewModel,
@@ -45,6 +46,12 @@ namespace DoseMetricExample.ViewModels
             SaveTemplateCommand = new DelegateCommand(OnSaveTemplate);
             LoadMetricsCommand = new DelegateCommand(OnLoadMetrics);
             PrintCommand = new DelegateCommand(OnPrint);
+            ClearMetricsCommand = new DelegateCommand(OnClearMetrics);
+        }
+
+        private void OnClearMetrics()
+        {
+            DoseMetricViewModel.DoseMetrics.Clear();
         }
 
         private void OnPrint()
@@ -77,6 +84,7 @@ namespace DoseMetricExample.ViewModels
         private void OnLoadMetrics()
         {
             OpenFileDialog ofd = new OpenFileDialog();
+            ofd.InitialDirectory = @"\\aristrprd001\va_data$\ProgramData\Vision\PublishedScripts\Json";
             ofd.Filter = "JSON (*.json)|*.json";
             if (ofd.ShowDialog() == true)
             {
@@ -105,6 +113,7 @@ namespace DoseMetricExample.ViewModels
             {
                 SaveFileDialog sfd = new SaveFileDialog();
                 sfd.Filter = "JSON (*.json)|*.json";
+                sfd.InitialDirectory = @"\\aristrprd001\va_data$\ProgramData\Vision\PublishedScripts\Json";
                 if (sfd.ShowDialog() == true)
                 {
                     using (StreamWriter sw = new StreamWriter(sfd.FileName))

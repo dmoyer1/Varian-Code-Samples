@@ -24,6 +24,8 @@
                 <Button Command="{Binding SaveTemplateCommand}" Content="Save Metrics" Margin="10"/>
 
                 <Button Command="{Binding LoadMetricsCommand}" Content="Load Metrics" Margin="10"/>
+
+                <Button Command="{Binding ClearMetricsCommand}" Content="Clear Metrics" Margin="10"/>
             </StackPanel>
             <Grid Grid.Row="4">
                 <Grid.ColumnDefinitions>

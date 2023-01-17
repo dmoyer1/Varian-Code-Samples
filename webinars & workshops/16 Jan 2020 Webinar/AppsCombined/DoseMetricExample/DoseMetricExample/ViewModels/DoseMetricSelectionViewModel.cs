@@ -57,6 +57,7 @@ namespace DoseMetricExample.ViewModels
             }
         }
         public DelegateCommand AddMetricCommand{ get; set; }
+
         public DoseMetricSelectionViewModel(PlanSetup plan,
             IEventAggregator eventAggregator)
         {
@@ -66,7 +67,6 @@ namespace DoseMetricExample.ViewModels
             Structures = new List<Structure>(plan.StructureSet.Structures);
             AddMetricCommand = new DelegateCommand(OnAddMetric, CanAddMetric);
             SetDoseMetrics();
-
         }
 
         private void OnAddMetric()
@@ -111,6 +111,43 @@ namespace DoseMetricExample.ViewModels
                 OutputUnit = "cc",
                 InputUnit = "cGy"
             });
+            DoseMetrics.Add(new DoseMetricModel(_plan)
+            {
+                Metric = "Volume"
+                ,
+                OutputUnits = new List<string> { "cc"},
+                InputUnits = new List<string> { "cc"},
+                OutputUnit = "cc",
+                InputUnit = "cc"
+            });
+            DoseMetrics.Add(new DoseMetricModel(_plan)
+            {
+                Metric = "MU"
+                ,
+                OutputUnits = new List<string> { "MU All Beams" },
+                InputUnits = new List<string> { "MU All Beams" },
+                OutputUnit = "MU All Beams",
+                InputUnit = "MU All Beams"
+            });
+            DoseMetrics.Add(new DoseMetricModel(_plan)
+            {
+                Metric = "EffectiveDepth"
+                ,
+                OutputUnits = new List<string> { "cm to Iso" },
+                InputUnits = new List<string> { "cm" },
+                OutputUnit = "cm to Iso",
+                InputUnit = "cm"
+            });
+            DoseMetrics.Add(new DoseMetricModel(_plan)
+            {
+                Metric = "HUOverride"
+                ,
+                OutputUnits = new List<string> { "HU" },
+                InputUnits = new List<string> { "HU" },
+                OutputUnit = "HU",
+                InputUnit = "HU"
+            });
+
         }
     }
 

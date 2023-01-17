@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Media3D;
 using VMS.TPS.Common.Model.API;
 using VMS.TPS.Common.Model.Types;
 
@@ -44,6 +45,42 @@ namespace DoseMetricExample.Models
                     new DoseValue(InputValue, (InputUnit == "%" ? DoseValue.DoseUnit.Percent : DoseValue.DoseUnit.cGy)),
                     OutputUnit == "%" ? VolumePresentation.Relative : VolumePresentation.AbsoluteCm3);
             }
+            else if (Metric == "Volume")
+            {
+                InputValue = Math.Round(_plan.StructureSet.Structures.FirstOrDefault(x => x.Id == Structure).Volume, 2);
+                OutputValue = Math.Round(_plan.StructureSet.Structures.FirstOrDefault(x => x.Id == Structure).Volume,2);
+            }
+            else if(Metric == "MU")
+            {
+                double test = 100;
+                foreach(Beam x in _plan.Beams)
+                {
+                    if(x.Meterset.Value != 100)
+                    {
+                        test = x.Meterset.Value;
+                    }
+                }
+                InputValue = test;
+                OutputValue = test;
+            }
+            else if (Metric == "EffectiveDepth")
+            {
+
+                InputValue = Math.Round(_plan.Beams.FirstOrDefault().FieldReferencePoints.FirstOrDefault().EffectiveDepth, 2);
+                OutputValue = Math.Round(_plan.Beams.FirstOrDefault().FieldReferencePoints.FirstOrDefault().EffectiveDepth, 2);
+            }
+
+            else if (Metric == "HUOverride")
+            {
+
+                Structure St = _plan.StructureSet.Structures.FirstOrDefault(x => x.Id == Structure);
+
+                St.GetAssignedHU(out double huvalue);
+
+                InputValue = huvalue;
+                OutputValue = huvalue;
+            }
+
             else { throw new ApplicationException("Could not determine metric"); }
             if (Tolerance.Contains("<"))
             {
@@ -53,10 +90,38 @@ namespace DoseMetricExample.Models
             {
                 ToleranceMet = OutputValue > Convert.ToDouble(Tolerance.TrimStart('>'));
             }
+            else if (Tolerance.Contains(">="))
+            {
+                ToleranceMet = OutputValue >= Convert.ToDouble(Tolerance.Trim(new Char[] { '>', '=' }));
+            }
+            else if (Tolerance.Contains("<="))
+            {
+                ToleranceMet = OutputValue <= Convert.ToDouble(Tolerance.Trim(new Char[] {'<','='}));
+            }
             else if (Tolerance.Contains("="))
             {
-                ToleranceMet = OutputValue == Convert.ToDouble(Tolerance.TrimStart('='));
+                ToleranceMet = Math.Round(OutputValue,2) == Convert.ToDouble(Tolerance.TrimStart('='));
             }
+            else if (Tolerance.Contains("%"))
+            {
+                var test = true;
+
+                if(OutputUnit == "cGy" && OutputValue <= Convert.ToDouble(Tolerance.TrimStart('%')) * 1.01 && OutputValue >= Convert.ToDouble(Tolerance.TrimStart('%')) * 0.99)
+                {
+                    test = true;
+                }
+                else if(OutputUnit == "%" && OutputValue <= Convert.ToDouble(Tolerance.TrimStart('%')) +1 && OutputValue >= Convert.ToDouble(Tolerance.TrimStart('%')) - 1)
+                {
+                    test = true;
+                }
+                else
+                {
+                    test = false;
+                }
+  
+                ToleranceMet = test;
+            }
+
             else { throw new ApplicationException("No Tolerance Specified"); }
         }
     }

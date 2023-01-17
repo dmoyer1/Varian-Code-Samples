@@ -35,12 +35,16 @@ namespace DoseParameters
 
         private void GetCalcData()
         {
-            CalculationParameters.Add(new TableDisplayModel { Property = "Caluclation Model", Value = $"{_plan.GetCalculationModel(CalculationType.PhotonVolumeDose)}" });
-            CalculationParameters.Add(new TableDisplayModel { Property = "Calculation Grid Size", Value = GetFromLogs("CalculationGridSizeInCM") });
-            CalculationParameters.Add(new TableDisplayModel { Property = "Field Normalization Type", Value = GetFromLogs("FieldNormalizationType") });
-            CalculationParameters.Add(new TableDisplayModel { Property = "Heterogeneity Correction", Value = GetFromLogs("HeterogeneityCorrection") });
-            CalculationParameters.Add(new TableDisplayModel { Property = "Dosimetric leaf gap", Value = GetFromLogs("Dosimetric leaf gap") });
-            CalculationParameters.Add(new TableDisplayModel { Property = "Leaf transmission factor", Value = GetFromLogs("Leaf transmission factor") });
+
+            if (!_plan.Beams.First().EnergyModeDisplayName.Contains("E"))
+            {
+                CalculationParameters.Add(new TableDisplayModel { Property = "Caluclation Model", Value = $"{_plan.GetCalculationModel(CalculationType.PhotonVolumeDose)}"});
+                CalculationParameters.Add(new TableDisplayModel { Property = "Dosimetric leaf gap", Value = GetFromLogs("Dosimetric leaf gap") });
+                CalculationParameters.Add(new TableDisplayModel { Property = "Leaf transmission factor", Value = GetFromLogs("Leaf transmission factor") });
+                CalculationParameters.Add(new TableDisplayModel { Property = "Calculation Grid Size", Value = GetFromLogs("CalculationGridSizeInCM") });
+                CalculationParameters.Add(new TableDisplayModel { Property = "Field Normalization Type", Value = GetFromLogs("FieldNormalizationType") });
+                CalculationParameters.Add(new TableDisplayModel { Property = "Heterogeneity Correction", Value = GetFromLogs("HeterogeneityCorrection") });
+            }
         }
 
         private string GetFromLogs(string v)

@@ -24,6 +24,7 @@ namespace DVHPlot.Models
                 _eventAggregator.GetEvent<StructureSelectionEvent>().Publish(this);
             }
         }
+
         public StructureSelectionModel(IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
